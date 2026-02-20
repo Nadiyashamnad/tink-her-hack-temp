@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CycleSense – Women's Health Companion</title>
+  <meta name="description"
+    content="CycleSense helps women track PCOS and Endometriosis symptoms, visualise patterns, and receive early health awareness in a private, empowering environment." />
+  <link rel="stylesheet" href="css/main.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+  <!-- ============================================
+     HAMBURGER (mobile)
+     ============================================ -->
+  <button id="hamburger-btn" aria-label="Open menu">☰</button>
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <!-- ============================================
+     SIDEBAR NAVIGATION
+     ============================================ -->
+  <nav id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-logo">
+      <span class="logo-icon">🌸</span>
+      <h1>CycleSense</h1>
+      <p>Women's Health Companion</p>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <button class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">🏠</span> Dashboard
+      </button>
+
+      <div class="nav-section-label">Tracking</div>
+      <button class="nav-item" data-page="symptoms">
+        <span class="nav-icon">📋</span> Symptom Tracker
+      </button>
+      <button class="nav-item" data-page="food">
+        <span class="nav-icon">🥗</span> Food Tracker
+      </button>
+
+      <div class="nav-section-label">Insights</div>
+      <button class="nav-item" data-page="risk">
+        <span class="nav-icon">🔮</span> AI Risk Score
+      </button>
+      <button class="nav-item" data-page="patterns">
+        <span class="nav-icon">📊</span> Pattern Graphs
+      </button>
+
+      <div class="nav-section-label">Care</div>
+      <button class="nav-item" data-page="doctors">
+        <span class="nav-icon">👩‍⚕️</span> Find Doctors
+      </button>
+      <button class="nav-item" data-page="report">
+        <span class="nav-icon">📄</span> Doctor Report
+      </button>
+
+      <div class="nav-section-label">Account</div>
+      <button class="nav-item" data-page="settings">
+        <span class="nav-icon">⚙️</span> Settings
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="privacy-toggle-mini">
+        <label class="toggle-switch">
+          <input type="checkbox" class="privacy-toggle-cb" onchange="togglePrivacy(this)" />
+          <span class="toggle-slider"></span>
+        </label>
+        <span>🔒 Privacy Mode</span>
+        <span class="privacy-icon-indicator">🔒</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================
+     MAIN CONTENT
+     ============================================ -->
+  <main id="main-content">
+
+    <!-- ==========================================
+       PAGE: AUTH (Login/Signup)
+       ========================================== -->
+    <div id="page-auth" class="page">
+      <div style="max-width:450px; margin: 40px auto;">
+        <div class="card" id="auth-card">
+          <div style="text-align:center; margin-bottom: 30px;">
+            <span style="font-size: 3rem;">🌸</span>
+            <h2 style="font-family: var(--font-dis); margin-top: 10px;">Welcome to CycleSense</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Empowering your health journey</p>
+          </div>
+
+          <div id="login-form">
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="login-email" placeholder="sarah@example.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" id="login-password" placeholder="••••••••" />
+            </div>
+            <button class="btn btn-primary btn-block btn-lg" onclick="handleLogin()">Sign In</button>
+            <p style="text-align:center; margin-top:20px; font-size:0.9rem; color:var(--text-secondary);">
+              Don't have an account? <a href="#" onclick="toggleAuthMode('signup')"
+                style="color:var(--purple); font-weight:700; text-decoration:none;">Create one</a>
+            </p>
+          </div>
+
+          <div id="signup-form" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="signup-name" placeholder="Sarah Jenkins" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="signup-email" placeholder="sarah@example.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" id="signup-password" placeholder="••••••••" />
+            </div>
+            <button class="btn btn-primary btn-block btn-lg" onclick="handleSignup()">Create Account</button>
+            <p style="text-align:center; margin-top:20px; font-size:0.9rem; color:var(--text-secondary);">
+              Already have an account? <a href="#" onclick="toggleAuthMode('login')"
+                style="color:var(--purple); font-weight:700; text-decoration:none;">Sign in</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="disclaimer-box mt-6" style="text-align:center;">
+          <p style="font-size:0.75rem;">🔒 Your health data is private. We use JWT authentication to keep your records
+            secure and accessible only to you.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 1: DASHBOARD
+       ========================================== -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2><span id="dashboard-greeting">Good morning, </span><span data-user-name>Sarah</span> 🌸</h2>
+          <p>Here's your health overview for today</p>
+        </div>
+        <span class="header-date" id="header-date"></span>
+      </div>
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <h3>Your body, your story 💜</h3>
+        <p>Track your symptoms daily for the most accurate pattern insights and early PCOS &amp; Endometriosis
+          awareness.</p>
+      </div>
+
+      <!-- Overview Cards -->
+      <div class="grid-3 mb-6">
+        <!-- Cycle Status -->
+        <div class="card card-gradient-lavender">
+          <div class="card-title">🌙 Cycle Status</div>
+          <div class="card-value" id="cycle-day-display">Day 14 of 28</div>
+          <div class="cycle-visual">
+            <div class="cycle-dot"></div>
+            <div class="cycle-bar">
+              <div class="cycle-fill" id="cycle-fill" style="width:50%"></div>
+            </div>
+          </div>
+          <div class="card-sub blurred" id="today-symptoms" style="margin-top:8px">Loading…</div>
+        </div>
+
+        <!-- Today's Log -->
+        <div class="card card-gradient-pink">
+          <div class="card-title">📋 Today's Log</div>
+          <div class="card-value blurred" id="today-log-pain">—</div>
+          <div class="card-sub">Tap Symptom Tracker to log today</div>
+          <div style="margin-top:12px">
+            <button class="btn btn-primary btn-sm" onclick="navigateTo('symptoms')">+ Log Now</button>
+          </div>
+        </div>
+
+        <!-- AI Risk Score -->
+        <div class="card card-gradient-purple">
+          <div class="card-title">🔮 AI Risk Score</div>
+          <div class="card-value blurred" id="dash-risk-score">0</div>
+          <div id="dash-risk-label" class="card-sub risk-score-label risk-label-low">Low Risk</div>
+          <div style="margin-top:12px">
+            <button class="btn btn-ghost btn-sm" onclick="navigateTo('risk')">View Details</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card mb-6">
+        <div class="card-title">⚡ Quick Actions</div>
+        <div class="quick-actions mt-4">
+          <button class="quick-action-btn" onclick="navigateTo('symptoms')">
+            <span class="qa-icon">📋</span><span>Log Symptoms</span>
+          </button>
+          <button class="quick-action-btn" onclick="navigateTo('food')">
+            <span class="qa-icon">🍎</span><span>Log Food</span>
+          </button>
+          <button class="quick-action-btn" onclick="navigateTo('patterns')">
+            <span class="qa-icon">📊</span><span>View Report</span>
+          </button>
+          <button class="quick-action-btn" onclick="navigateTo('report')">
+            <span class="qa-icon">📄</span><span>Doctor Report</span>
+          </button>
+          <button class="quick-action-btn" onclick="navigateTo('doctors')">
+            <span class="qa-icon">👩‍⚕️</span><span>Find Doctor</span>
+          </button>
+          <button class="quick-action-btn" onclick="navigateTo('risk')">
+            <span class="qa-icon">🔮</span><span>Risk Score</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Daily Wellness Tip -->
+      <div class="card">
+        <div class="card-title">💡 Daily Wellness Tip</div>
+        <div id="daily-tip"></div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 2: SYMPTOM TRACKER
+       ========================================== -->
+    <div id="page-symptoms" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Symptom Tracker 📋</h2>
+          <p>Log how you're feeling today</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Input Form -->
+        <div class="card">
+          <div class="card-title">📝 Today's Entry</div>
+
+          <!-- Pain Level -->
+          <div class="form-group mt-4">
+            <label class="form-label">😣 Pain Level</label>
+            <div class="slider-value-display" id="pain-value">5</div>
+            <input type="range" id="pain-slider" min="1" max="10" value="5" />
+            <div class="slider-labels"><span>1 – No pain</span><span>10 – Severe</span></div>
+          </div>
+
+          <!-- Fatigue Level -->
+          <div class="form-group">
+            <label class="form-label">😴 Fatigue Level</label>
+            <div class="slider-value-display" id="fatigue-value">5</div>
+            <input type="range" id="fatigue-slider" min="1" max="10" value="5" />
+            <div class="slider-labels"><span>1 – Energised</span><span>10 – Exhausted</span></div>
+          </div>
+
+          <!-- Mood -->
+          <div class="form-group">
+            <label class="form-label">🎭 Mood</label>
+            <div class="mood-selector">
+              <button class="mood-btn" data-mood="😄 Happy"><span
+                  class="mood-emoji">😄</span><span>Happy</span></button>
+              <button class="mood-btn" data-mood="🙂 Good"><span class="mood-emoji">🙂</span><span>Good</span></button>
+              <button class="mood-btn" data-mood="😐 Okay"><span class="mood-emoji">😐</span><span>Okay</span></button>
+              <button class="mood-btn" data-mood="😔 Sad"><span class="mood-emoji">😔</span><span>Sad</span></button>
+              <button class="mood-btn" data-mood="😰 Anxious"><span
+                  class="mood-emoji">😰</span><span>Anxious</span></button>
+              <button class="mood-btn" data-mood="😤 Irritated"><span
+                  class="mood-emoji">😤</span><span>Irritated</span></button>
+            </div>
+          </div>
+
+          <!-- Acne / Hair Fall Toggles -->
+          <div class="form-group">
+            <label class="form-label">🔍 Symptoms Present Today</label>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-row-label">🌿 Acne / Breakouts</div>
+                <div class="toggle-row-sub">Hormonal acne around jawline or chin</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="acne-toggle" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-row-label">💇 Hair Fall</div>
+                <div class="toggle-row-sub">Unusual hair thinning or shedding</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="hairfall-toggle" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Period Dates -->
+          <div class="form-group">
+            <label class="form-label">🗓️ Period Dates (optional)</label>
+            <div class="grid-2" style="gap:10px">
+              <div>
+                <label class="form-label" style="font-size:.75rem">Start Date</label>
+                <input type="date" class="form-control" id="period-start" />
+              </div>
+              <div>
+                <label class="form-label" style="font-size:.75rem">End Date</label>
+                <input type="date" class="form-control" id="period-end" />
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block btn-lg" onclick="saveSymptoms()">
+            💾 Save Entry
+          </button>
+        </div>
+
+        <!-- History -->
+        <div class="card">
+          <div class="card-title">📅 Recent Entries</div>
+          <div class="symptom-history" id="symptom-history-list">
+            <div class="empty-state">
+              <div class="empty-icon">📋</div>
+              <p>No symptoms logged yet. Start tracking to see your history.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 3: FOOD TRACKER
+       ========================================== -->
+    <div id="page-food" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Food Tracker 🍎</h2>
+          <p>Track what you eat to understand its impact on your cycle</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Add Food -->
+        <div class="card">
+          <div class="card-title">➕ Add Food Item</div>
+          <div class="form-group mt-4">
+            <label class="form-label">Food Item</label>
+            <input type="text" class="form-control" id="food-input" placeholder="e.g. Spinach salad, Burger, Latte…"
+              onkeypress="if(event.key==='Enter') addFood()" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <div class="chip-group">
+              <button class="chip food-chip selected" onclick="setFoodCategory('healthy',this)">🥗 Healthy</button>
+              <button class="chip food-chip" onclick="setFoodCategory('junk',this)">🍔 Junk</button>
+              <button class="chip food-chip" onclick="setFoodCategory('sugar',this)">🍰 Sugar</button>
+              <button class="chip food-chip" onclick="setFoodCategory('caffeine',this)">☕ Caffeine</button>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addFood()">
+            ➕ Add to Log
+          </button>
+
+          <div class="disclaimer-box mt-6">
+            <p>💜 <strong>Tip:</strong> Anti-inflammatory foods like leafy greens, berries, and omega-3-rich fish may
+              help reduce PCOS and endometriosis symptoms. Limit sugar and ultra-processed foods.</p>
+          </div>
+        </div>
+
+        <!-- Food List -->
+        <div class="card">
+          <div class="card-title">📋 Today's Food Log</div>
+          <div class="food-list" id="food-list">
+            <div class="empty-state">
+              <div class="empty-icon">🍽️</div>
+              <p>No foods logged yet. Add your first entry on the left.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 4: AI RISK SCORE
+       ========================================== -->
+    <div id="page-risk" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>AI Risk Pattern Score 🔮</h2>
+          <p>Based on your logged symptoms and patterns</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Gauge -->
+        <div class="card">
+          <div class="card-title">📊 Risk Indicator</div>
+          <div class="risk-gauge-container">
+            <canvas id="risk-gauge-canvas" width="280" height="140"></canvas>
+            <div class="risk-label-container blurred">
+              <div class="risk-score-value risk-low" id="risk-score-value">0</div>
+              <div class="risk-score-label risk-label-low" id="risk-score-label">Low Risk 🌿</div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div style="display:flex;gap:18px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;color:#39a763">
+              <div style="width:12px;height:12px;border-radius:50%;background:#6bcb8b"></div> Low (0–34)
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;color:#b38800">
+              <div style="width:12px;height:12px;border-radius:50%;background:#f7c948"></div> Moderate (35–64)
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;color:#d94a4a">
+              <div style="width:12px;height:12px;border-radius:50%;background:#f47b7b"></div> High (65–100)
+            </div>
+          </div>
+
+          <div class="disclaimer-box mt-6">
+            <p>🔔 <strong>Note:</strong> This score is based on symptom patterns entered by you. <strong>This is not a
+                medical diagnosis.</strong> Always consult a qualified healthcare professional for proper evaluation.
+            </p>
+          </div>
+        </div>
+
+        <!-- Factors -->
+        <div class="card">
+          <div class="card-title">⚖️ Risk Factor Breakdown</div>
+          <div id="risk-factors" class="risk-factors mt-4">
+            <div class="empty-state">
+              <div class="empty-icon">📊</div>
+              <p>Log symptoms to generate your risk score.</p>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+          <div id="risk-explanation" class="section-subtitle">
+            Log more symptoms to get a personalised risk assessment.
+          </div>
+
+          <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="navigateTo('symptoms')">📋 Log Symptoms</button>
+            <button class="btn btn-outline" onclick="navigateTo('doctors')">👩‍⚕️ Find Doctor</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 5: PATTERN GRAPHS
+       ========================================== -->
+    <div id="page-patterns" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Pattern Visualisation 📊</h2>
+          <p>Your symptom trends over time</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card chart-card">
+          <div class="chart-title">😣 Pain Level Over Time</div>
+          <canvas id="pain-chart"></canvas>
+        </div>
+        <div class="card chart-card">
+          <div class="chart-title">😴 Fatigue Level Over Time</div>
+          <canvas id="fatigue-chart"></canvas>
+        </div>
+      </div>
+      <div class="mt-6">
+        <div class="card chart-card">
+          <div class="chart-title">🎭 Mood Pattern Over Time</div>
+          <canvas id="mood-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="card mt-6">
+        <div class="card-title">💡 Pattern Insights</div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:14px">
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <span style="font-size:1.4rem">🔍</span>
+            <div>
+              <div style="font-weight:800;color:var(--text-primary);margin-bottom:4px">Track consistently for better
+                insights</div>
+              <div style="font-size:.84rem;color:var(--text-secondary)">Log your symptoms daily for at least 2 weeks to
+                start seeing meaningful patterns in your health data.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <span style="font-size:1.4rem">📅</span>
+            <div>
+              <div style="font-weight:800;color:var(--text-primary);margin-bottom:4px">Cycle Correlation</div>
+              <div style="font-size:.84rem;color:var(--text-secondary)">Pain and fatigue often peak during the luteal
+                phase (days 15–28). Tracking helps identify your personal patterns.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <span style="font-size:1.4rem">🌡️</span>
+            <div>
+              <div style="font-weight:800;color:var(--text-primary);margin-bottom:4px">PCOS Signals</div>
+              <div style="font-size:.84rem;color:var(--text-secondary)">Irregular cycles, elevated pain, and recurring
+                acne are common PCOS indicators. Bring these charts to your doctor.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 6: FIND DOCTORS
+       ========================================== -->
+    <div id="page-doctors" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Find Doctors 👩‍⚕️</h2>
+          <p>Recommended specialists for PCOS and Endometriosis</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <!-- Consult your doctor card -->
+          <div class="card mb-6" style="border-top:4px solid var(--lavender)">
+            <div class="card-title">💜 Consult Your Personal Doctor</div>
+            <p style="font-size:.87rem;color:var(--text-secondary);margin:10px 0 16px;line-height:1.6">Already have a
+              gynaecologist? Share your CycleSense report with them for an informed consultation.</p>
+            <button class="btn btn-primary" onclick="navigateTo('report')">📄 Generate Report</button>
+          </div>
+
+          <!-- Doctor 1 -->
+          <div class="doctor-card">
+            <div class="doctor-avatar">👩‍⚕️</div>
+            <div style="flex:1">
+              <div class="doctor-name">Dr. Priya Sharma</div>
+              <div class="doctor-specialty">PCOS Specialist</div>
+              <div class="doctor-location">📍 Apollo Hospital, Mumbai</div>
+              <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">⭐⭐⭐⭐⭐ &nbsp;|&nbsp; 12+ yrs
+                experience</div>
+              <div class="doctor-actions">
+                <a href="tel:+911234567890" class="btn btn-primary btn-sm">📞 Call</a>
+                <button class="btn btn-outline btn-sm">✉️ Message</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor 2 -->
+          <div class="doctor-card">
+            <div class="doctor-avatar">👩‍⚕️</div>
+            <div style="flex:1">
+              <div class="doctor-name">Dr. Kavita Reddy</div>
+              <div class="doctor-specialty">Endometriosis Expert</div>
+              <div class="doctor-location">📍 Fortis Hospital, Bangalore</div>
+              <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">⭐⭐⭐⭐⭐ &nbsp;|&nbsp; 15+ yrs
+                experience</div>
+              <div class="doctor-actions">
+                <a href="tel:+910987654321" class="btn btn-primary btn-sm">📞 Call</a>
+                <button class="btn btn-outline btn-sm">✉️ Message</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor 3 -->
+          <div class="doctor-card">
+            <div class="doctor-avatar">👩‍⚕️</div>
+            <div style="flex:1">
+              <div class="doctor-name">Dr. Ananya Mehta</div>
+              <div class="doctor-specialty">PCOS &amp; Hormonal Health</div>
+              <div class="doctor-location">📍 Max Hospital, Delhi</div>
+              <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">⭐⭐⭐⭐½ &nbsp;|&nbsp; 9+ yrs
+                experience</div>
+              <div class="doctor-actions">
+                <a href="tel:+911122334455" class="btn btn-primary btn-sm">📞 Call</a>
+                <button class="btn btn-outline btn-sm">✉️ Message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Doctor 4 -->
+          <div class="doctor-card">
+            <div class="doctor-avatar">👨‍⚕️</div>
+            <div style="flex:1">
+              <div class="doctor-name">Dr. Rohan Verma</div>
+              <div class="doctor-specialty">Reproductive Medicine</div>
+              <div class="doctor-location">📍 AIIMS, New Delhi</div>
+              <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">⭐⭐⭐⭐⭐ &nbsp;|&nbsp; 20+ yrs
+                experience</div>
+              <div class="doctor-actions">
+                <a href="tel:+919876543210" class="btn btn-primary btn-sm">📞 Call</a>
+                <button class="btn btn-outline btn-sm">✉️ Message</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor 5 -->
+          <div class="doctor-card">
+            <div class="doctor-avatar">👩‍⚕️</div>
+            <div style="flex:1">
+              <div class="doctor-name">Dr. Sneha Pillai</div>
+              <div class="doctor-specialty">Endometriosis &amp; Laparoscopy</div>
+              <div class="doctor-location">📍 Kokilaben Hospital, Mumbai</div>
+              <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">⭐⭐⭐⭐⭐ &nbsp;|&nbsp; 11+ yrs
+                experience</div>
+              <div class="doctor-actions">
+                <a href="tel:+915544332211" class="btn btn-primary btn-sm">📞 Call</a>
+                <button class="btn btn-outline btn-sm">✉️ Message</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reminder -->
+          <div class="card" style="border-left:4px solid var(--red)">
+            <div class="card-title">🔔 When to Seek Urgent Help</div>
+            <p style="font-size:.84rem;color:var(--text-secondary);margin-top:8px;line-height:1.65">
+              If you experience <strong>severe pelvic pain</strong>, heavy bleeding, or symptoms that interfere with
+              daily activities, please seek medical attention immediately. Do not rely solely on this app for medical
+              decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 7: DOCTOR SUMMARY REPORT
+       ========================================== -->
+    <div id="page-report" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Doctor Summary Report 📄</h2>
+          <p>A comprehensive summary to share with your healthcare provider</p>
+        </div>
+        <button class="btn btn-primary" onclick="downloadReport()">⬇️ Download PDF</button>
+      </div>
+
+      <div class="card" id="report-printable">
+        <!-- Report Header -->
+        <div style="text-align:center;padding:16px 0 24px;border-bottom:2px solid var(--lavender-light)">
+          <div style="font-size:2.2rem;margin-bottom:6px">🌸</div>
+          <div style="font-family:var(--font-dis);font-size:1.5rem;color:var(--text-primary);font-weight:800">CycleSense
+            Health Report</div>
+          <div style="font-size:.83rem;color:var(--text-muted)">Women's Health Companion — Confidential</div>
+          <div style="display:flex;gap:28px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+            <span style="font-size:.82rem;color:var(--text-secondary)">Patient: <strong id="report-name"
+                class="blurred">—</strong></span>
+            <span style="font-size:.82rem;color:var(--text-secondary)">Generated: <strong
+                id="report-date">—</strong></span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:26px">
+          <!-- Cycle Info -->
+          <div class="report-section">
+            <h4>Cycle Information</h4>
+            <div class="report-row">
+              <span class="report-row-label">Current Cycle Status</span>
+              <span class="report-row-value blurred" id="report-cycle">—</span>
+            </div>
+            <div class="report-row">
+              <span class="report-row-label">Period Start (Last)</span>
+              <span class="report-row-value blurred" id="report-period-start">—</span>
+            </div>
+            <div class="report-row">
+              <span class="report-row-label">Period End (Last)</span>
+              <span class="report-row-value blurred" id="report-period-end">—</span>
+            </div>
+          </div>
+
+          <!-- Risk Score -->
+          <div class="report-section">
+            <h4>Risk Assessment</h4>
+            <div class="report-row">
+              <span class="report-row-label">Total Symptom Logs</span>
+              <span class="report-row-value" id="report-total-logs">0</span>
+            </div>
+            <div class="report-row">
+              <span class="report-row-label">AI Risk Score</span>
+              <span class="report-row-value risk-low" id="report-risk">—</span>
+            </div>
+          </div>
+
+          <!-- Symptom Summary -->
+          <div class="report-section">
+            <h4>Symptom Summary</h4>
+            <div class="report-row">
+              <span class="report-row-label">Average Pain Level</span>
+              <span class="report-row-value blurred" id="report-avg-pain">—</span>
+            </div>
+            <div class="report-row">
+              <span class="report-row-label">Average Fatigue Level</span>
+              <span class="report-row-value blurred" id="report-avg-fatigue">—</span>
+            </div>
+            <div class="report-row">
+              <span class="report-row-label">Acne Occurrences</span>
+              <span class="report-row-value" id="report-acne">0</span>
+            </div>
+            <div class="report-row">
+              <span class="report-row-label">Hair Fall Occurrences</span>
+              <span class="report-row-value" id="report-hairfall">0</span>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="report-section">
+            <h4>Additional Notes for Doctor</h4>
+            <textarea class="form-control" rows="5" placeholder="Add any notes for your doctor here…"
+              style="resize:vertical"></textarea>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="disclaimer-box mt-6">
+          <p>⚠️ <strong>Disclaimer:</strong> This report is generated from self-reported data entered into the
+            CycleSense app. It is intended as a supplementary tool for healthcare discussions and <strong>does not
+              constitute a medical diagnosis</strong>. Please consult a qualified healthcare professional for proper
+            medical evaluation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 8: SETTINGS  (includes Privacy Mode)
+       ========================================== -->
+    <div id="page-settings" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Settings ⚙️</h2>
+          <p>Manage your preferences and data</p>
+        </div>
+      </div>
+
+      <!-- Privacy -->
+      <div class="settings-section">
+        <div class="settings-section-title">🔒 Privacy Mode</div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-row-label">Enable Privacy Mode</div>
+            <div class="toggle-row-sub">Blur all sensitive health data on screen</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" class="privacy-toggle-cb" onchange="togglePrivacy(this)" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="mt-4">
+          <p style="font-size:.82rem;color:var(--text-muted);line-height:1.65">
+            🔒 When Privacy Mode is enabled, all sensitive health information (pain levels, cycle dates, risk scores)
+            will be blurred. A lock icon will appear in the sidebar indicator.
+          </p>
+        </div>
+      </div>
+
+      <!-- Data Management -->
+      <div class="settings-section">
+        <div class="settings-section-title">💾 Data Management</div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-row-label">Local Data Storage</div>
+            <div class="toggle-row-sub">All data is stored only on your device</div>
+          </div>
+          <span class="badge badge-green">✅ Secure</span>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-row-label">Cloud / Backend</div>
+            <div class="toggle-row-sub">Connected to WomenCare API & MongoDB</div>
+          </div>
+          <span class="badge badge-green">📡 Active</span>
+        </div>
+        <div style="margin-top:18px">
+          <button class="btn btn-outline btn-block" onclick="logout()" style="margin-bottom:12px">👋 Logout from
+            Account</button>
+          <button class="btn btn-danger btn-block" onclick="resetAllData()">🗑️ Reset All Local Data</button>
+          <p style="font-size:.78rem;color:var(--text-muted);margin-top:8px">
+            This will permanently delete all tracked symptoms, food logs, and settings. This action cannot be undone.
+          </p>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="settings-section">
+        <div class="settings-section-title">ℹ️ About CycleSense</div>
+        <div class="toggle-row">
+          <span class="toggle-row-label">Version</span>
+          <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">2.0.0</span>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-row-label">Technology</span>
+          <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">HTML · CSS · JavaScript</span>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-row-label">Data Storage</span>
+          <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">Browser LocalStorage only</span>
+        </div>
+      </div>
+
+      <!-- Medical Disclaimer -->
+      <div class="settings-section">
+        <div class="settings-section-title">⚠️ Medical Disclaimer</div>
+        <div class="disclaimer-box">
+          <p>🌸 <strong>CycleSense is an awareness and tracking tool, not a medical device.</strong> This app does not
+            provide medical diagnosis, treatment, or professional medical advice. The AI Risk Score is a pattern
+            indicator calculated from user-entered data and is not clinically validated.</p>
+          <br />
+          <p>Always consult a qualified gynaecologist or healthcare provider for diagnosis and treatment of PCOS,
+            Endometriosis, or any other medical condition. If you are experiencing severe symptoms, please seek medical
+            attention immediately.</p>
+          <br />
+          <p>💜 <em>Our goal is to empower women with information and tools for self-awareness — your health journey is
+              personal, valid, and worthy of proper care.</em></p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============================================
+     BOTTOM NAV (Mobile)
+     ============================================ -->
+  <nav id="bottom-nav" aria-label="Mobile navigation">
+    <button class="bottom-nav-item active" data-page="dashboard">
+      <span class="bnav-icon">🏠</span><span>Home</span>
+    </button>
+    <button class="bottom-nav-item" data-page="symptoms">
+      <span class="bnav-icon">📋</span><span>Symptoms</span>
+    </button>
+    <button class="bottom-nav-item" data-page="food">
+      <span class="bnav-icon">🍎</span><span>Food</span>
+    </button>
+    <button class="bottom-nav-item" data-page="risk">
+      <span class="bnav-icon">🔮</span><span>Risk</span>
+    </button>
+    <button class="bottom-nav-item" data-page="settings">
+      <span class="bnav-icon">⚙️</span><span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Keyboard: Escape closes sidebar on mobile
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeSidebar();
+    });
+  </script>
+
+</body>
+
+</html>
