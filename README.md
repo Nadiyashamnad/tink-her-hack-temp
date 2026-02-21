@@ -40,10 +40,14 @@ Node.js with Express.js (Backend)
 Chart.js – Data visualization
 
 Axios – API communication
-- Tools used: [e.g., VS Code, Git, Docker]
+- Tools used:VS Code – Development
+
+Git & GitHub – Version control
+
+Postman – API testing
 
 **For Hardware:**
-- Main components: [List main components]
+- Main components:no hardware components used
 - Specifications: [Technical specifications]
 - Tools required: [List tools needed]
 
@@ -52,11 +56,10 @@ Axios – API communication
 ## Features
 
 List the key features of your project:
-- Feature 1: [Description]
-- Feature 2: [Description]
-- Feature 3: [Description]
-- Feature 4: [Description]
-
+- Feature 1: Symptom Tracker: Allows users to log pain levels, fatigue, mood changes, and menstrual cycle dates for continuous health monitoring.
+- Feature 2:Food Tracker: Records daily food intake and categorizes items such as sugar, junk food, and caffeine to identify food–health correlations.
+- Feature 3:AI Risk Score: Analyzes symptom frequency and cycle irregularities to generate an early risk level (Low / Medium / High) for PCOS and Endometriosis.
+- Feature 4:Pattern Visualization: Displays interactive charts showing trends in pain, fatigue, and cycle length to help users understand their health patterns.
 ---
 
 ## Implementation
@@ -65,15 +68,33 @@ List the key features of your project:
 
 #### Installation
 ```bash
-[Installation commands - e.g., npm install, pip install -r requirements.txt]
+# Clone the repository
+git clone https://github.com/your-username/cyclesense.git
+
+# Navigate to project directory
+cd cyclesense
+
+# Install frontend dependencies
+cd client
+npm install
+
+# Install backend dependencies
+cd ../server
+npm install
 ```
 
 #### Run
 ```bash
-[Run commands - e.g., npm start, python app.py]
-```
+# Start backend server
+cd server
+npm start
+
+# Start frontend application (in a new terminal)
+cd client
+npm start
 
 ### For Hardware:
+hardware components are not used in the project.
 
 #### Components Required
 [List all components needed with specifications]
@@ -89,38 +110,63 @@ List the key features of your project:
 
 #### Screenshots (Add at least 3)
 
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+![Screenshot1]! [frontpage] (image.png)
+it shows the basic front page of the website
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+![Screenshot2]![second page] (image-1.png))
+it shows the second page f the website
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+![Screenshot3]![third page](image-2.png))
+it shows the third page of the website
 
 #### Diagrams
 
 **System Architecture:**
 
-![Architecture Diagram](docs/architecture.png)
-*Explain your system architecture - components, data flow, tech stack interaction*
+![Architecture Diagram]
+User / Client
 
-**Application Workflow:**
+Users access the application via a web browser on desktop or mobile.
 
-![Workflow](docs/workflow.png)
-*Add caption explaining your workflow*
+Input data includes symptoms, cycle details, and food logs.
+
+Frontend (React.js + Tailwind CSS)
+
+Handles user interface, form inputs, and visualization of charts (Chart.js).
+
+Sends requests to the backend API.
+
+Backend (Node.js + Express.js)
+
+Processes requests, validates user data, and interacts with the database.
+
+Performs AI-based risk calculations using historical symptoms and cycle data.
+
+Database (MySQL)
+
+Stores user information, cycle history, symptom logs, and food data securely.
+
+Supports querying for trend analysis and AI pattern detection.
+
+AI Risk Analysis Module
+
+Calculates risk scores for PCOS and Endometriosis based on patterns in the data.
+
+Outputs risk levels: Low / Medium / High.
+
+Doctor Summary Report Generator
+
+Compiles user data, patterns, and AI risk score into a downloadable PDF.
+
+Helps doctors quickly understand a patient’s health history.
+
+Data Flow
+
+User → Frontend → Backend → MySQL Database → AI Risk Analysis → Report Generation → Frontend
 
 ---
 
-### For Hardware:
 
-#### Schematic & Circuit
-
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
-
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
 
 #### Build Photos
 
@@ -143,17 +189,30 @@ List the key features of your project:
 
 #### API Documentation
 
-**Base URL:** `https://api.yourproject.com`
+**Base URL:** http://127.0.0.1:5504/cyclesense/
 
 ##### Endpoints
 
 **GET /api/endpoint**
-- **Description:** [What it does]
+- **Description:**Fetches all logged symptoms for the authenticated user.
 - **Parameters:**
-  - `param1` (string): [Description]
-  - `param2` (integer): [Description]
+  - userId (string): ID of the user whose symptoms are fetched
+  
 - **Response:**
 ```json
+{
+  "status": "success",
+  "data": [
+    {
+      "date": "2026-02-21",
+      "painLevel": 3,
+      "fatigue": 2,
+      "mood": "neutral",
+      "cycleDay": 5
+    }
+  ]
+}
+
 {
   "status": "success",
   "data": {}
@@ -161,16 +220,32 @@ List the key features of your project:
 ```
 
 **POST /api/endpoint**
-- **Description:** [What it does]
+- **Description:**Adds a new symptom entry for the user.
 - **Request Body:**
 ```json
+
+ {
+  "userId": "12345",
+  "date": "2026-02-21",
+  "painLevel": 3,
+  "fatigue": 2,
+  "mood": "neutral",
+  "cycleDay": 5
+}
 {
+  
+}
+
   "field1": "value1",
   "field2": "value2"
 }
 ```
 - **Response:**
 ```json
+{
+  "status": "success",
+  "message": "Symptom logged successfully"
+}
 {
   "status": "success",
   "message": "Operation completed"
@@ -184,28 +259,28 @@ List the key features of your project:
 ### For Mobile Apps:
 
 #### App Flow Diagram
-
-![App Flow](docs/app-flow.png)
-*Explain the user flow through your application*
-
-#### Installation Guide
-
-**For Android (APK):**
-1. Download the APK from [Release Link]
-2. Enable "Install from Unknown Sources" in your device settings:
-   - Go to Settings > Security
-   - Enable "Unknown Sources"
-3. Open the downloaded APK file
-4. Follow the installation prompts
-5. Open the app and enjoy!
-
-**For iOS (IPA) - TestFlight:**
-1. Download TestFlight from the App Store
-2. Open this TestFlight link: [Your TestFlight Link]
-3. Click "Install" or "Accept"
-4. Wait for the app to install
-5. Open the app from your home screen
-
+User → Frontend (React.js + Tailwind CSS)
+      │
+      ▼
+Data Input: Symptoms, Cycle, Food Logs
+      │
+      ▼
+Backend (Node.js + Express.js)
+      │
+      ▼
+Database (MySQL)
+      │
+      ▼
+AI Risk Analysis Module
+      │
+      ▼
+Pattern Visualization (Chart.js) → Dashboard
+      │
+      ▼
+Doctor Summary Report → Downloadable PDF
+      │
+      ▼
+Optional: Find Doctors → Consultation Requests
 **Building from Source:**
 ```bash
 # For Android
@@ -221,52 +296,8 @@ xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug
 
 ---
 
-### For Hardware Projects:
 
-#### Bill of Materials (BOM)
 
-| Component | Quantity | Specifications | Price | Link/Source |
-|-----------|----------|----------------|-------|-------------|
-| Arduino Uno | 1 | ATmega328P, 16MHz | ₹450 | [Link] |
-| LED | 5 | Red, 5mm, 20mA | ₹5 each | [Link] |
-| Resistor | 5 | 220Ω, 1/4W | ₹1 each | [Link] |
-| Breadboard | 1 | 830 points | ₹100 | [Link] |
-| Jumper Wires | 20 | Male-to-Male | ₹50 | [Link] |
-| [Add more...] | | | | |
-
-**Total Estimated Cost:** ₹[Amount]
-
-#### Assembly Instructions
-
-**Step 1: Prepare Components**
-1. Gather all components listed in the BOM
-2. Check component specifications
-3. Prepare your workspace
-![Step 1](images/assembly-step1.jpg)
-*Caption: All components laid out*
-
-**Step 2: Build the Power Supply**
-1. Connect the power rails on the breadboard
-2. Connect Arduino 5V to breadboard positive rail
-3. Connect Arduino GND to breadboard negative rail
-![Step 2](images/assembly-step2.jpg)
-*Caption: Power connections completed*
-
-**Step 3: Add Components**
-1. Place LEDs on breadboard
-2. Connect resistors in series with LEDs
-3. Connect LED cathodes to GND
-4. Connect LED anodes to Arduino digital pins (2-6)
-![Step 3](images/assembly-step3.jpg)
-*Caption: LED circuit assembled*
-
-**Step 4: [Continue for all steps...]**
-
-**Final Assembly:**
-![Final Build](images/final-build.jpg)
-*Caption: Completed project ready for testing*
-
----
 
 ### For Scripts/CLI Tools:
 
@@ -274,105 +305,99 @@ xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug
 
 **Basic Usage:**
 ```bash
-python script.py [options] [arguments]
+node <script-name>.js [options] [arguments]
+
 ```
 
 **Available Commands:**
-- `command1 [args]` - Description of what command1 does
-- `command2 [args]` - Description of what command2 does
-- `command3 [args]` - Description of what command3 does
+node seedDatabase.js – Populate MySQL database with sample data for testing
+
+node calculateAIRisk.js [userId] – Run AI risk analysis for a specific user
+
+node generateReport.js [userId] – Generate doctor summary report for a user
+
+node cleanupOldData.js – Remove outdated records from the database
 
 **Options:**
-- `-h, --help` - Show help message and exit
-- `-v, --verbose` - Enable verbose output
-- `-o, --output FILE` - Specify output file path
-- `-c, --config FILE` - Specify configuration file
-- `--version` - Show version information
+-h, --help – Show help message and exit
 
-**Examples:**
+-v, --verbose – Enable detailed logging output
 
-```bash
-# Example 1: Basic usage
-python script.py input.txt
+-o, --output FILE – Specify output file path for reports
 
-# Example 2: With verbose output
-python script.py -v input.txt
+-c, --config FILE – Specify custom configuration file
 
-# Example 3: Specify output file
-python script.py -o output.txt input.txt
+--version – Show version information
 
-# Example 4: Using configuration
-python script.py -c config.json --verbose input.txt
-```
 
 #### Demo Output
 
 **Example 1: Basic Processing**
 
 **Input:**
-```
-This is a sample input file
-with multiple lines of text
-for demonstration purposes
-```
+{
+  "userId": "12345",
+  "date": "2026-02-21",
+  "painLevel": 3,
+  "fatigue": 2,
+  "mood": "neutral",
+  "cycleDay": 5
+}
 
 **Command:**
 ```bash
-python script.py sample.txt
+node seedDatabase.js
 ```
 
 **Output:**
-```
-Processing: sample.txt
-Lines processed: 3
-Characters counted: 86
-Status: Success
-Output saved to: output.txt
-```
+{
+  "status": "success",
+  "message": "Symptom logged successfully"
+}
 
 **Example 2: Advanced Usage**
 
 **Input:**
-```json
 {
-  "name": "test",
-  "value": 123
-}
-```
+  "userId": "12345",
+  "symptoms": [
+    {"date": "2026-02-21", "painLevel": 3, "fatigue": 2, "mood": "neutral", "cycleDay": 5},
+    {"date": "2026-02-22", "painLevel": 4, "fatigue": 3, "mood": "tired", "cycleDay": 6}
+  ],
+  "cycleHistory": [
+    {"month": "Jan", "length": 28},
+    {"month": "Feb", "length": 30}
+  ]
 
 **Command:**
 ```bash
-python script.py -v --format json data.json
+node calculateAIRisk.js --userId 12345 --verbose --output json
 ```
 
 **Output:**
-```
-[VERBOSE] Loading configuration...
-[VERBOSE] Parsing JSON input...
-[VERBOSE] Processing data...
+[VERBOSE] Fetching user data from database...
+[VERBOSE] Parsing symptom and cycle history...
+[VERBOSE] Running AI risk analysis...
 {
   "status": "success",
   "processed": true,
-  "result": {
-    "name": "test",
-    "value": 123,
-    "timestamp": "2024-02-07T10:30:00"
+  "data": {
+    "riskLevel": "Medium",
+    "condition": "PCOS",
+    "score": 0.65,
+    "recommendation": "Monitor symptoms and consult a gynecologist if pain increases."
   }
 }
-[VERBOSE] Operation completed in 0.23s
-```
-
----
-
+[VERBOSE] AI risk calculation completed in 0.42s
 ## Project Demo
 
 ### Video
-[Add your demo video link here - YouTube, Google Drive, etc.]
+<video controls src="website.mp4" title="cycle sense"></video>
+it shows the basic view of the website and how it works.
 
-*Explain what the video demonstrates - key features, user flow, technical highlights*
 
 ### Additional Demos
-[Add any extra demo materials/links - Live site, APK download, online demo, etc.]
+http://127.0.0.1:5504/cyclesense/
 
 ---
 
@@ -380,19 +405,9 @@ python script.py -v --format json data.json
 
 If you used AI tools during development, document them here for transparency:
 
-**Tool Used:** [e.g., GitHub Copilot, v0.dev, Cursor, ChatGPT, Claude]
+**Tool Used:**  GitHub ,ChatGPT,antigravity
 
-**Purpose:** [What you used it for]
-- Example: "Generated boilerplate React components"
-- Example: "Debugging assistance for async functions"
-- Example: "Code review and optimization suggestions"
 
-**Key Prompts Used:**
-- "Create a REST API endpoint for user authentication"
-- "Debug this async function that's causing race conditions"
-- "Optimize this database query for better performance"
-
-**Percentage of AI-generated code:** [Approximately X%]
 
 **Human Contributions:**
 - Architecture design and planning
@@ -404,12 +419,9 @@ If you used AI tools during development, document them here for transparency:
 
 ---
 
-## Team Contributions
+Nandana J V: Frontend development (React.js, Tailwind CSS), Dashboard & Pattern Visualization, Presentation preparation.
 
-- [Name 1]: [Specific contributions - e.g., Frontend development, API integration, etc.]
-- [Name 2]: [Specific contributions - e.g., Backend development, Database design, etc.]
-- [Name 3]: [Specific contributions - e.g., UI/UX design, Testing, Documentation, etc.]
-
+Nadiya S: Backend development (Node.js, Express.js), AI risk analysis module, API integration.
 ---
 
 ## License
@@ -424,3 +436,4 @@ This project is licensed under the [LICENSE_NAME] License - see the [LICENSE](LI
 ---
 
 Made with ❤️ at TinkerHub
+
