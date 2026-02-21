@@ -11,6 +11,10 @@
 - **Member 1**: Nandana JV - College of Engineering Attingal
 - **Member 2**: Nadiya S - College of Engineering Attingal
 
+<p align="center">
+  <img src="./nandana.jpeg" width="300" alt="Team Photo">
+</p>
+
 ### Hosted Project Link
 [Live Demo on Render](https://tink-her-hack-temp-v3lb.onrender.com/)
 
@@ -132,10 +136,7 @@ graph TD
 - **Nandana JV**: Frontend development, Dashboard UI, Data Visualization (Chart.js), and Documentation.
 - **Nadiya S**: Backend API development (Node.js/Express), Database design, and AI Risk Module integration.
 
----
 
-## 📜 License
-This project is licensed under the MIT License.
 
 ---
 <p align="center">Made with ❤️ at TinkerHub</p>
