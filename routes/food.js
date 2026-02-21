@@ -1,41 +1,40 @@
 const express = require("express");
 const Food = require("../models/Food");
-const auth = require("../middleware/authMiddleware");
+// const auth = require("../middleware/authMiddleware");
+const { GUEST_USER_ID } = require("../config/constants");
 
 const router = express.Router();
 
-// Add food log
-router.post("/add", auth, async (req, res) => {
+router.post("/add", async (req, res) => {
     try {
-        const food = new Food({
+        const food = await Food.create({
             ...req.body,
-            userId: req.user.id
+            userId: GUEST_USER_ID
         });
-        await food.save();
         res.json(food);
     } catch (err) {
         res.status(500).json({ msg: "Server error" });
     }
 });
 
-// Get user food history
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
-        const data = await Food.find({ userId: req.user.id }).sort({ date: -1 });
+        const data = await Food.findAll({
+            where: { userId: GUEST_USER_ID },
+            order: [['date', 'DESC']]
+        });
         res.json(data);
     } catch (err) {
         res.status(500).json({ msg: "Server error" });
     }
 });
 
-// Delete food item
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
-        const food = await Food.findById(req.params.id);
+        const food = await Food.findOne({ where: { id: req.params.id, userId: GUEST_USER_ID } });
         if (!food) return res.status(404).json({ msg: "Not found" });
-        if (food.userId.toString() !== req.user.id) return res.status(401).json({ msg: "Unauthorized" });
 
-        await food.deleteOne();
+        await food.destroy();
         res.json({ msg: "Removed" });
     } catch (err) {
         res.status(500).json({ msg: "Server error" });

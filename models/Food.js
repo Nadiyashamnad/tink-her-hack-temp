@@ -1,10 +1,28 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const FoodSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    name: { type: String, required: true },
-    category: { type: String, enum: ['healthy', 'junk', 'sugar', 'caffeine'], required: true },
-    date: { type: Date, default: Date.now }
+const Food = sequelize.define('Food', {
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+    },
+    userId: {
+        type: DataTypes.UUID,
+        allowNull: false
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    category: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    date: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    }
 });
 
-module.exports = mongoose.model("Food", FoodSchema);
+module.exports = Food;

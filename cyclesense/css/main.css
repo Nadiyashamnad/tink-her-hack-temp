@@ -58,6 +58,41 @@
     --red: #f47b7b;
 }
 
+/* ---- Dark Theme Overrides ---- */
+[data-theme='dark'] {
+    /* Backgrounds */
+    --bg: #14111d;
+    --off-white: #1b1727;
+    --white: #201b2e;
+    --card-bg: #201b2e;
+
+    /* Text */
+    --text-primary: #efebf5;
+    --text-secondary: #b0a0c0;
+    --text-muted: #8a7c9d;
+
+    /* Elements */
+    --lavender-light: #2d2442;
+    --pink-light: #3d2c40;
+    --rose: #33273d;
+
+    /* Shadows */
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    --card-shadow-hover: 0 15px 45px rgba(0, 0, 0, 0.6);
+
+    /* Adjusted Gradients */
+    --grad-soft: linear-gradient(135deg, #251a3a 0%, #3a1a2b 100%);
+    --grad-main: linear-gradient(135deg, #9a6ecb 0%, #e07aaa 100%);
+
+    /* Border Adjustment */
+    --border: rgba(255, 255, 255, 0.08);
+}
+
+/* Add global border variable for light mode first if not exists */
+:root {
+    --border: rgba(0, 0, 0, 0.05);
+}
+
 /* ---- Reset & Base ---- */
 *,
 *::before,
@@ -774,6 +809,7 @@ input[type="date"] {
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-primary);
+    cursor: pointer;
 }
 
 .toggle-row-sub {
@@ -1539,5 +1575,435 @@ input[type="date"] {
 
     .chip-group {
         gap: 6px;
+    }
+}
+
+/* ============================================
+   WATER TRACKER
+   ============================================ */
+
+/* SVG progress ring */
+.water-ring-wrap {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 16px auto;
+}
+
+.water-ring-svg {
+    display: block;
+}
+
+.water-ring-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.water-ring-count {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #1971c2;
+    line-height: 1;
+}
+
+.water-ring-unit {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+/* Glass grid */
+.water-glasses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    justify-content: center;
+}
+
+.water-glass {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid var(--lavender-light);
+    background: var(--white);
+    cursor: pointer;
+    transition: var(--tx);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.water-glass:hover {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 4px 14px rgba(74, 171, 247, .30);
+    border-color: #74c0fc;
+}
+
+.water-glass.filled {
+    background: linear-gradient(135deg, #d0ebff, #a5d8ff);
+    border-color: #74c0fc;
+    box-shadow: 0 2px 10px rgba(74, 171, 247, .25);
+}
+
+.glass-icon {
+    line-height: 1;
+}
+
+/* Weekly history bars */
+.water-history {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.water-history-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.water-day-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    min-width: 30px;
+}
+
+.water-bar-track {
+    flex: 1;
+    height: 10px;
+    background: var(--lavender-light);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.water-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width .5s cubic-bezier(.4, 0, .2, 1);
+}
+
+.water-day-count {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    min-width: 34px;
+    text-align: right;
+}
+
+/* Tips list */
+.water-tips {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.water-tips li {
+    font-size: 0.85rem;
+    color: #1971c2;
+    font-weight: 700;
+    line-height: 1.5;
+    padding-left: 4px;
+}
+
+/* ---- AI Suggestions ---- */
+.suggestion-card {
+    padding: 24px;
+    text-align: center;
+    border: none;
+    background: var(--white);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.suggestion-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(160, 100, 200, .15);
+}
+
+.suggestion-icon {
+    font-size: 2.8rem;
+    margin-bottom: 12px;
+}
+
+.suggestion-title {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.suggestion-text {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ============================================
+   GLOBAL NOTIFICATION BAR
+   ============================================ */
+.notification-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 20px;
+    pointer-events: none;
+}
+
+.notification {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 14px 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(123, 76, 170, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    animation: notification-slide-in 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: all 0.3s ease;
+    border-left: 6px solid #7b4caa;
+}
+
+.notification.removing {
+    opacity: 0;
+    transform: scale(0.9);
+    margin-top: -60px;
+}
+
+.notification-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.notification-content {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+/* Notification Types */
+.notification-success {
+    border-left-color: #51cf66;
+}
+
+.notification-warning {
+    border-left-color: #fcc419;
+}
+
+.notification-error {
+    border-left-color: #ff6b6b;
+}
+
+.notification-info {
+    border-left-color: #4dabf7;
+}
+
+@keyframes notification-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .notification-container {
+        top: 14px;
+        max-width: 100%;
+    }
+
+    .notification {
+        padding: 12px 16px;
+        border-radius: 12px;
+    }
+}
+
+/* ============================================
+   NOTIFICATION BELL & CENTER
+   ============================================ */
+.theme-toggle-btn,
+.notification-bell-btn {
+    position: relative;
+    background: var(--white);
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: var(--tx);
+    font-size: 1.3rem;
+}
+
+.theme-toggle-btn:hover,
+.notification-bell-btn:hover {
+    transform: scale(1.1);
+    background: var(--lavender-light);
+}
+
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--red);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 900;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(244, 123, 123, 0.4);
+    animation: badge-pulse 2s infinite;
+}
+
+@keyframes badge-pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(244, 123, 123, 0.4);
+    }
+
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 8px rgba(244, 123, 123, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(244, 123, 123, 0);
+    }
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notification-item {
+    padding: 18px 22px;
+    border-radius: 16px;
+    background: var(--off-white);
+    border: 2px solid transparent;
+    display: flex;
+    gap: 16px;
+    transition: var(--tx);
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-item:hover {
+    background: var(--white);
+    border-color: var(--lavender-light);
+    transform: translateX(4px);
+}
+
+.notification-item.unread {
+    background: var(--white);
+    border-color: var(--lavender);
+}
+
+.notification-item.unread::before {
+    content: "";
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    width: 10px;
+    height: 10px;
+    background: #4dabf7;
+    border-radius: 50%;
+}
+
+.ni-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.ni-content {
+    flex: 1;
+}
+
+.ni-title {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.ni-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.ni-time {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-weight: 700;
+}
+
+.ni-priority-success {
+    border-left: 5px solid #51cf66 !important;
+}
+
+.ni-priority-warning {
+    border-left: 5px solid #fcc419 !important;
+}
+
+.ni-priority-error {
+    border-left: 5px solid #ff6b6b !important;
+}
+
+.ni-priority-info {
+    border-left: 5px solid #4dabf7 !important;
+}
+
+/* ---- AI Loader ---- */
+.loader-spinner {
+    display: inline-block;
+    animation: ai-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes ai-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+        filter: drop-shadow(0 0 8px var(--lavender));
     }
 }

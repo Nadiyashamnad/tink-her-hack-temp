@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-02-21T00:04:21.948Z",
+  "totalRows": 10000,
+  "diagnosedGroup": {
+    "label": "Endometriosis Diagnosed",
+    "count": 4079,
+    "meanPain": 5.3103,
+    "stdPain": 1.9635,
+    "p25Pain": 3.9866,
+    "p50Pain": 5.243,
+    "p75Pain": 6.635,
+    "p90Pain": 7.8852,
+    "meanAge": 33.56,
+    "meanBMI": 23.43,
+    "irregularityRate": 0.7502,
+    "hormoneAbnRate": 0.7019,
+    "infertilityRate": 0.3513
+  },
+  "healthyGroup": {
+    "label": "No Diagnosis",
+    "count": 5921,
+    "meanPain": 4.838,
+    "stdPain": 1.9749,
+    "p25Pain": 3.4619,
+    "p50Pain": 4.8503,
+    "p75Pain": 6.1903,
+    "p90Pain": 7.385,
+    "meanAge": 33.78,
+    "meanBMI": 22.79,
+    "irregularityRate": 0.6612,
+    "hormoneAbnRate": 0.5148,
+    "infertilityRate": 0.2618
+  },
+  "painLookup": {
+    "0.0": 0.4,
+    "0.5": 0.9,
+    "1.0": 1.5,
+    "1.5": 2.7,
+    "2.0": 4.8,
+    "2.5": 7.5,
+    "3.0": 11.3,
+    "3.5": 17.5,
+    "4.0": 25.2,
+    "4.5": 34.5,
+    "5.0": 44.3,
+    "5.5": 55.3,
+    "6.0": 64.1,
+    "6.5": 72.8,
+    "7.0": 80.1,
+    "7.5": 85.6,
+    "8.0": 90.8,
+    "8.5": 94.3,
+    "9.0": 96.6,
+    "9.5": 98.2,
+    "10.0": 100
+  },
+  "scoringWeights": {
+    "pain": 0.45,
+    "irregularity": 0.35,
+    "hormoneProxy": 0.2
+  }
+}

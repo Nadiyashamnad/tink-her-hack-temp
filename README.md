@@ -2,15 +2,15 @@
   <img src="./img.png" alt="Project Banner" width="100%">
 </p>
 
-# [Project Name] 🎯
+# [Project Name] 🎯CYCLE SENSE
 
-## Basic Details
+## Basic Details CYCLE SENSE IS A FULL STACK AI POWERED WOMEN HEALTH RELATED WEBSITE DESIGNED TO SUPPORT EARLY RISK AWARENESS ,HEALTH TRACKING AND PREVENTVE CARE FOR CONDITIONS LIKE PCO'S AND ENDOMETRIOSIS.IT GOES BEYOND BASIC TRACKING BY ANALYSING PATTERNS AND GENERATING MEANINGFUL INSIGHTS FOR USERS AND DOCTORS.
 
-### Team Name: [Name]
+### Team Name: TECH TITANS
 
 ### Team Members
-- Member 1: [Name] - [College]
-- Member 2: [Name] - [College]
+- Member 1: NANDANA JV - College of Engineering Attingal
+- Member 2: NADIYA S - College of Engineering Attingal
 
 ### Hosted Project Link
 [mention your project hosted link here]
@@ -19,10 +19,10 @@
 [2-3 lines about what your project does]
 
 ### The Problem statement
-[What problem are you solving?]
+ Conditions like PCOS and Endometriosis are often diagnosed late due to irregular symptoms and lack of early awareness. Most existing health apps only track menstrual cycles without analyzing patterns or providing meaningful insights. This leaves women with fragmented data and delayed medical support. There is a need for an intelligent system that analyzes health data, detects early risk patterns, and supports preventive women’s healthcare.
 
 ### The Solution
-[How are you solving it?]
+CycleSense is an AI-powered women’s health companion that goes beyond basic tracking by analyzing menstrual, symptom, and lifestyle data to detect early risk patterns for conditions like PCOS and Endometriosis. It visualizes health trends, generates doctor-ready reports, and supports preventive healthcare through intelligent insights and easy access to medical consultation.
 
 ---
 
@@ -31,9 +31,15 @@
 ### Technologies/Components Used
 
 **For Software:**
-- Languages used: [e.g., JavaScript, Python, Java]
-- Frameworks used: [e.g., React, Django, Spring Boot]
-- Libraries used: [e.g., axios, pandas, JUnit]
+- Languages used:JavaScript
+- Frameworks used:React.js (Frontend)
+
+Node.js with Express.js (Backend)
+- Libraries used: Tailwind CSS – UI styling
+
+Chart.js – Data visualization
+
+Axios – API communication
 - Tools used: [e.g., VS Code, Git, Docker]
 
 **For Hardware:**

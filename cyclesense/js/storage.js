@@ -57,7 +57,7 @@ const CycleStorage = {
         try {
             const food = await this.apiRequest('/food/add', 'POST', entry);
             const list = this.getFoods();
-            list.unshift({ ...food, id: food._id, date: new Date(food.date).toISOString().split('T')[0] });
+            list.unshift({ ...food, id: food.id, date: new Date(food.date).toISOString().split('T')[0] });
             this.set('foods', list);
             return food;
         } catch (e) {
@@ -73,7 +73,7 @@ const CycleStorage = {
             await this.apiRequest(`/food/${id}`, 'DELETE');
         } catch (e) { console.error('Delete food error:', e); }
 
-        const list = this.getFoods().filter(f => f.id !== id && f._id !== id);
+        const list = this.getFoods().filter(f => f.id !== id);
         this.set('foods', list);
     },
 
@@ -83,25 +83,29 @@ const CycleStorage = {
     },
     saveSettings(data) { this.set('settings', data); },
 
-    // ---- Token ----
-    getToken() { return localStorage.getItem(this.PREFIX + 'token'); },
-    setToken(token) { localStorage.setItem(this.PREFIX + 'token', token); },
-    removeToken() { localStorage.removeItem(this.PREFIX + 'token'); },
-
     // ---- API Sync ----
     async apiRequest(endpoint, method = 'GET', body = null) {
-        const token = this.getToken();
         const options = {
             method,
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token || ''
+                'Content-Type': 'application/json'
             }
         };
         if (body) options.body = JSON.stringify(body);
 
-        const res = await fetch(`/api${endpoint}`, options);
-        const data = await res.json();
+        // If the frontend is hosted on a different port (e.g. Live Server on 5504), 
+        // explicitly target the backend on port 5000.
+        const apiBase = window.location.port !== '5000' ? 'http://localhost:5000/api' : '/api';
+        const res = await fetch(`${apiBase}${endpoint}`, options);
+        let data;
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            data = await res.json();
+        } else {
+            const text = await res.text();
+            data = { msg: text || 'Unknown error occurred' };
+        }
+
         if (!res.ok) throw new Error(data.msg || 'API Error');
         return data;
     },
@@ -111,14 +115,12 @@ const CycleStorage = {
             const data = await this.apiRequest('/period');
             if (Array.isArray(data)) {
                 const transformed = data.sort((a, b) => new Date(b.startDate || 0) - new Date(a.startDate || 0)).map(s => ({
-                    id: s._id,
-                    _id: s._id,
+                    id: s.id,
+                    _id: s.id,
                     date: s.startDate ? new Date(s.startDate).toISOString().split('T')[0] : '',
                     pain: s.painLevel || 0,
                     fatigue: s.fatigueLevel || 0,
                     mood: s.mood || '',
-                    acne: s.acne || false,
-                    hairFall: s.hairFall || false,
                     periodStart: s.startDate ? new Date(s.startDate).toISOString().split('T')[0] : '',
                     periodEnd: s.endDate ? new Date(s.endDate).toISOString().split('T')[0] : ''
                 }));
@@ -132,8 +134,8 @@ const CycleStorage = {
             const data = await this.apiRequest('/food');
             if (Array.isArray(data)) {
                 const transformed = data.map(f => ({
-                    id: f._id,
-                    _id: f._id,
+                    id: f.id,
+                    _id: f.id,
                     name: f.name,
                     category: f.category,
                     date: new Date(f.date).toISOString().split('T')[0]
@@ -141,13 +143,41 @@ const CycleStorage = {
                 this.set('foods', transformed);
             }
         } catch (e) { console.error('Sync foods error:', e); }
+    },
+
+    // ---- Alerts ----
+    getAlerts() {
+        return this.get('persistent_alerts', []);
+    },
+    saveAlerts(alerts) {
+        this.set('persistent_alerts', alerts);
+    },
+    addAlert(alert) {
+        const alerts = this.getAlerts();
+        const newAlert = {
+            id: Date.now(),
+            read: false,
+            timestamp: new Date().toISOString(),
+            ...alert
+        };
+        alerts.unshift(newAlert);
+        this.saveAlerts(alerts.slice(0, 50)); // Keep last 50
+        return newAlert;
+    },
+    markAlertRead(id) {
+        const alerts = this.getAlerts();
+        const a = alerts.find(x => x.id === id);
+        if (a) a.read = true;
+        this.saveAlerts(alerts);
+    },
+    clearAlerts() {
+        this.saveAlerts([]);
     }
 };
 
 // ============================================
 //  Risk Score Calculator
-//  Weighted scoring: Pain 35%, Fatigue 25%,
-//  Acne 20%, Hair Fall 10%, Diet 10%
+//  Weighted scoring: Pain 40%, Fatigue 40%, Diet 20%
 // ============================================
 const RiskCalculator = {
     compute() {
@@ -159,28 +189,47 @@ const RiskCalculator = {
         const recent = symptoms.slice(0, 10);
         const avgPain = recent.reduce((s, x) => s + (x.pain || 0), 0) / recent.length;
         const avgFatigue = recent.reduce((s, x) => s + (x.fatigue || 0), 0) / recent.length;
-        const acneCount = recent.filter(x => x.acne).length;
-        const hairCount = recent.filter(x => x.hairFall).length;
         const junkFoods = foods.filter(f => f.category === 'junk' || f.category === 'sugar').length;
 
-        const painScore = (avgPain / 10) * 35;
-        const fatigueScore = (avgFatigue / 10) * 25;
-        const acneScore = (acneCount / Math.max(recent.length, 1)) * 20;
-        const hairScore = (hairCount / Math.max(recent.length, 1)) * 10;
-        const foodScore = Math.min(junkFoods / 5, 1) * 10;
+        const painScore = (avgPain / 10) * 40;
+        const fatigueScore = (avgFatigue / 10) * 40;
+        const foodScore = Math.min(junkFoods / 5, 1) * 20;
 
-        const total = Math.round(painScore + fatigueScore + acneScore + hairScore + foodScore);
+        const total = Math.round(painScore + fatigueScore + foodScore);
         const clamped = Math.min(100, Math.max(0, total));
         const level = clamped < 35 ? 'low' : clamped < 65 ? 'medium' : 'high';
 
         const factors = [
-            { name: 'Pain Level', value: Math.round(painScore), max: 35, fill: avgPain > 6 ? '#f47b7b' : avgPain > 3 ? '#f7c948' : '#6bcb8b' },
-            { name: 'Fatigue', value: Math.round(fatigueScore), max: 25, fill: avgFatigue > 6 ? '#f47b7b' : '#f7c948' },
-            { name: 'Acne / Hormonal', value: Math.round(acneScore), max: 20, fill: '#c8b4e8' },
-            { name: 'Hair Fall', value: Math.round(hairScore), max: 10, fill: '#f5a7c7' },
-            { name: 'Diet Impact', value: Math.round(foodScore), max: 10, fill: '#f7c948' },
+            { name: 'Pain Level', value: Math.round(painScore), max: 40, fill: avgPain > 6 ? '#f47b7b' : avgPain > 3 ? '#f7c948' : '#6bcb8b' },
+            { name: 'Fatigue', value: Math.round(fatigueScore), max: 40, fill: avgFatigue > 6 ? '#f47b7b' : '#f7c948' },
+            { name: 'Diet Impact', value: Math.round(foodScore), max: 20, fill: '#f7c948' },
         ];
 
-        return { score: clamped, level, factors };
+        // Suggestions logic
+        const suggestions = [];
+        if (avgPain > 6) {
+            suggestions.push({
+                icon: '🧘‍♀️',
+                title: 'Yoga for Pain Relief',
+                text: 'Try gentle Child\'s Pose or Reclined Bound Angle pose to relax pelvic muscles and ease cramps.'
+            });
+        }
+        if (avgFatigue > 6) {
+            suggestions.push({
+                icon: '🥬',
+                title: 'Boost Iron Intake',
+                text: 'High fatigue can be linked to iron deficiency. Increase intake of spinach, lentils, and lean red meat.'
+            });
+        }
+        const withPeriod = recent.filter(s => s.periodStart).length;
+        if (withPeriod > 0 && withPeriod < recent.length * 0.6) {
+            suggestions.push({
+                icon: '🕯️',
+                title: 'Lifestyle Syncing',
+                text: 'Irregular cycles benefit from consistent sleep and reduced cortisol. Try magnesium-rich snacks before bed.'
+            });
+        }
+
+        return { score: clamped, level, factors, suggestions };
     }
 };

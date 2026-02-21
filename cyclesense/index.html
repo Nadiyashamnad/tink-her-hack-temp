@@ -42,6 +42,9 @@
       <button class="nav-item" data-page="food">
         <span class="nav-icon">🥗</span> Food Tracker
       </button>
+      <button class="nav-item" data-page="water">
+        <span class="nav-icon">💧</span> Water Tracker
+      </button>
 
       <div class="nav-section-label">Insights</div>
       <button class="nav-item" data-page="risk">
@@ -49,6 +52,9 @@
       </button>
       <button class="nav-item" data-page="patterns">
         <span class="nav-icon">📊</span> Pattern Graphs
+      </button>
+      <button class="nav-item" data-page="analysis">
+        <span class="nav-icon">🔬</span> Dataset Analysis
       </button>
 
       <div class="nav-section-label">Care</div>
@@ -59,7 +65,6 @@
         <span class="nav-icon">📄</span> Doctor Report
       </button>
 
-      <div class="nav-section-label">Account</div>
       <button class="nav-item" data-page="settings">
         <span class="nav-icon">⚙️</span> Settings
       </button>
@@ -82,61 +87,6 @@
      ============================================ -->
   <main id="main-content">
 
-    <!-- ==========================================
-       PAGE: AUTH (Login/Signup)
-       ========================================== -->
-    <div id="page-auth" class="page">
-      <div style="max-width:450px; margin: 40px auto;">
-        <div class="card" id="auth-card">
-          <div style="text-align:center; margin-bottom: 30px;">
-            <span style="font-size: 3rem;">🌸</span>
-            <h2 style="font-family: var(--font-dis); margin-top: 10px;">Welcome to CycleSense</h2>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Empowering your health journey</p>
-          </div>
-
-          <div id="login-form">
-            <div class="form-group">
-              <label class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="login-email" placeholder="sarah@example.com" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Password</label>
-              <input type="password" class="form-control" id="login-password" placeholder="••••••••" />
-            </div>
-            <button class="btn btn-primary btn-block btn-lg" onclick="handleLogin()">Sign In</button>
-            <p style="text-align:center; margin-top:20px; font-size:0.9rem; color:var(--text-secondary);">
-              Don't have an account? <a href="#" onclick="toggleAuthMode('signup')"
-                style="color:var(--purple); font-weight:700; text-decoration:none;">Create one</a>
-            </p>
-          </div>
-
-          <div id="signup-form" style="display:none;">
-            <div class="form-group">
-              <label class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="signup-name" placeholder="Sarah Jenkins" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="signup-email" placeholder="sarah@example.com" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Password</label>
-              <input type="password" class="form-control" id="signup-password" placeholder="••••••••" />
-            </div>
-            <button class="btn btn-primary btn-block btn-lg" onclick="handleSignup()">Create Account</button>
-            <p style="text-align:center; margin-top:20px; font-size:0.9rem; color:var(--text-secondary);">
-              Already have an account? <a href="#" onclick="toggleAuthMode('login')"
-                style="color:var(--purple); font-weight:700; text-decoration:none;">Sign in</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="disclaimer-box mt-6" style="text-align:center;">
-          <p style="font-size:0.75rem;">🔒 Your health data is private. We use JWT authentication to keep your records
-            secure and accessible only to you.</p>
-        </div>
-      </div>
-    </div>
 
     <!-- ==========================================
        PAGE 1: DASHBOARD
@@ -147,7 +97,16 @@
           <h2><span id="dashboard-greeting">Good morning, </span><span data-user-name>Sarah</span> 🌸</h2>
           <p>Here's your health overview for today</p>
         </div>
-        <span class="header-date" id="header-date"></span>
+        <div class="page-header-right" style="display:flex; align-items:center; gap:16px;">
+          <button id="theme-toggle-btn" class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span id="theme-icon">☀️</span>
+          </button>
+          <button class="notification-bell-btn" onclick="navigateTo('notifications')" aria-label="Notifications">
+            <span class="bell-icon">🔔</span>
+            <span id="notification-badge" class="notification-badge" style="display:none">0</span>
+          </button>
+          <span class="header-date" id="header-date"></span>
+        </div>
       </div>
 
       <!-- Welcome Banner -->
@@ -215,6 +174,12 @@
           <button class="quick-action-btn" onclick="navigateTo('risk')">
             <span class="qa-icon">🔮</span><span>Risk Score</span>
           </button>
+          <button class="quick-action-btn" onclick="navigateTo('water')">
+            <span class="qa-icon">💧</span><span>Water Log</span>
+          </button>
+          <button class="quick-action-btn" onclick="navigateTo('analysis')">
+            <span class="qa-icon">🔬</span><span>Dataset Analysis</span>
+          </button>
         </div>
       </div>
 
@@ -273,30 +238,6 @@
             </div>
           </div>
 
-          <!-- Acne / Hair Fall Toggles -->
-          <div class="form-group">
-            <label class="form-label">🔍 Symptoms Present Today</label>
-            <div class="toggle-row">
-              <div>
-                <div class="toggle-row-label">🌿 Acne / Breakouts</div>
-                <div class="toggle-row-sub">Hormonal acne around jawline or chin</div>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="acne-toggle" />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="toggle-row">
-              <div>
-                <div class="toggle-row-label">💇 Hair Fall</div>
-                <div class="toggle-row-sub">Unusual hair thinning or shedding</div>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="hairfall-toggle" />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-          </div>
 
           <!-- Period Dates -->
           <div class="form-group">
@@ -447,6 +388,12 @@
           </div>
         </div>
       </div>
+      <div id="ai-suggestions-section" style="display:none; margin-top: 24px;">
+        <div class="card-title" style="margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.4rem;">🧘‍♀️</span> Smart AI Health Suggestions
+        </div>
+        <div id="ai-suggestions-grid" class="grid-3"></div>
+      </div>
     </div>
 
     <!-- ==========================================
@@ -501,8 +448,8 @@
             <span style="font-size:1.4rem">🌡️</span>
             <div>
               <div style="font-weight:800;color:var(--text-primary);margin-bottom:4px">PCOS Signals</div>
-              <div style="font-size:.84rem;color:var(--text-secondary)">Irregular cycles, elevated pain, and recurring
-                acne are common PCOS indicators. Bring these charts to your doctor.</div>
+              <div style="font-size:.84rem;color:var(--text-secondary)">Irregular cycles and elevated pain are common
+                PCOS indicators. Bring these charts to your doctor.</div>
             </div>
           </div>
         </div>
@@ -694,14 +641,6 @@
               <span class="report-row-label">Average Fatigue Level</span>
               <span class="report-row-value blurred" id="report-avg-fatigue">—</span>
             </div>
-            <div class="report-row">
-              <span class="report-row-label">Acne Occurrences</span>
-              <span class="report-row-value" id="report-acne">0</span>
-            </div>
-            <div class="report-row">
-              <span class="report-row-label">Hair Fall Occurrences</span>
-              <span class="report-row-value" id="report-hairfall">0</span>
-            </div>
           </div>
 
           <!-- Notes -->
@@ -723,7 +662,120 @@
     </div>
 
     <!-- ==========================================
-       PAGE 8: SETTINGS  (includes Privacy Mode)
+       PAGE 8: WATER TRACKER
+       ========================================== -->
+    <div id="page-water" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Water Tracker 💧</h2>
+          <p>Stay hydrated — it helps regulate hormones and reduce symptoms</p>
+        </div>
+        <span class="header-date" id="water-date-label"></span>
+      </div>
+
+      <div class="grid-2">
+        <!-- Left: Glass Tap UI -->
+        <div class="card">
+          <div class="card-title">🥛 Today's Intake</div>
+
+          <!-- Big progress ring -->
+          <div class="water-ring-wrap">
+            <svg class="water-ring-svg" viewBox="0 0 160 160" width="160" height="160">
+              <circle cx="80" cy="80" r="66" fill="none" stroke="#ede6f9" stroke-width="14" />
+              <circle id="water-ring-circle" cx="80" cy="80" r="66" fill="none" stroke="url(#waterGrad)"
+                stroke-width="14" stroke-linecap="round" stroke-dasharray="414.69" stroke-dashoffset="414.69"
+                transform="rotate(-90 80 80)" style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)" />
+              <defs>
+                <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#74c0fc" />
+                  <stop offset="100%" stop-color="#4dabf7" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="water-ring-label">
+              <div class="water-ring-count" id="water-count">0</div>
+              <div class="water-ring-unit">/ <span id="water-goal-display">8</span> glasses</div>
+            </div>
+          </div>
+
+          <!-- Glass tap buttons -->
+          <div class="water-glasses" id="water-glasses"></div>
+
+          <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="addWaterGlass()" id="water-add-btn">+ Add Glass</button>
+            <button class="btn btn-ghost" onclick="removeWaterGlass()" id="water-remove-btn">− Remove</button>
+          </div>
+
+          <div class="disclaimer-box mt-6">
+            <p>💜 <strong>Daily goal:</strong> 8 glasses (≈ 2 litres) is the general recommendation. Your ideal intake
+              may vary based on climate and activity level.</p>
+          </div>
+        </div>
+
+        <!-- Right: History + Tips -->
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <!-- Weekly summary -->
+          <div class="card">
+            <div class="card-title">📅 This Week</div>
+            <div id="water-history" class="water-history mt-4"></div>
+          </div>
+
+          <!-- Goal setting -->
+          <div class="card">
+            <div class="card-title">🎯 Daily Goal</div>
+            <div class="form-group mt-4">
+              <label class="form-label">Glasses per day target</label>
+              <div style="display:flex;align-items:center;gap:14px">
+                <input type="range" id="water-goal-slider" min="4" max="16" value="8"
+                  oninput="updateWaterGoal(this.value)" style="flex:1" />
+                <span id="water-goal-val"
+                  style="font-weight:900;font-size:1.2rem;color:var(--purple);min-width:28px">8</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips -->
+          <div class="card" style="background:linear-gradient(135deg,#e8f4fd 0%,#d0e8fb 100%)">
+            <div class="card-title" style="color:#1971c2">💡 Hydration Tips</div>
+            <ul class="water-tips mt-4">
+              <li>🌅 Start your day with a glass of warm water</li>
+              <li>🍋 Add lemon or cucumber for taste</li>
+              <li>🔔 Set hourly phone reminders</li>
+              <li>🩺 Hydration can reduce PCOS-related bloating</li>
+              <li>☕ Limit caffeine — it's dehydrating</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 9: NOTIFICATIONS (Alert Center)
+       ========================================== -->
+    <div id="page-notifications" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Health Alerts 🔔</h2>
+          <p>Important updates and AI-driven insights</p>
+        </div>
+        <div class="page-header-right">
+          <button class="btn btn-outline btn-sm" onclick="clearAllNotifications()">🗑️ Clear All</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🕒 Recent Alerts</div>
+        <div id="notifications-list" class="notifications-list mt-4">
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <p>Your notification tray is empty.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 10: SETTINGS  (includes Privacy Mode)
        ========================================== -->
     <div id="page-settings" class="page">
       <div class="page-header">
@@ -764,54 +816,151 @@
           </div>
           <span class="badge badge-green">✅ Secure</span>
         </div>
-        <div class="toggle-row">
-          <div>
-            <div class="toggle-row-label">Cloud / Backend</div>
-            <div class="toggle-row-sub">Connected to WomenCare API & MongoDB</div>
+        <button class="btn btn-danger btn-block" onclick="resetAllData()">🗑️ Reset All Local Data</button>
+        <p style="font-size:.78rem;color:var(--text-muted);margin-top:8px">
+          This will permanently delete all tracked symptoms, food logs, and settings. This action cannot be undone.
+        </p>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="settings-section">
+      <div class="settings-section-title">ℹ️ About CycleSense</div>
+      <div class="toggle-row">
+        <span class="toggle-row-label">Version</span>
+        <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">2.0.0</span>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-row-label">Technology</span>
+        <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">HTML · CSS · JavaScript</span>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-row-label">Data Storage</span>
+        <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">Browser LocalStorage only</span>
+      </div>
+    </div>
+
+    <!-- Medical Disclaimer -->
+    <div class="settings-section">
+      <div class="settings-section-title">⚠️ Medical Disclaimer</div>
+      <div class="disclaimer-box">
+        <p>🌸 <strong>CycleSense is an awareness and tracking tool, not a medical device.</strong> This app does not
+          provide medical diagnosis, treatment, or professional medical advice. The AI Risk Score is a pattern
+          indicator calculated from user-entered data and is not clinically validated.</p>
+        <br />
+        <p>Always consult a qualified gynaecologist or healthcare provider for diagnosis and treatment of PCOS,
+          Endometriosis, or any other medical condition. If you are experiencing severe symptoms, please seek medical
+          attention immediately.</p>
+        <br />
+        <p>💜 <em>Our goal is to empower women with information and tools for self-awareness — your health journey is
+            personal, valid, and worthy of proper care.</em></p>
+      </div>
+    </div>
+    </div>
+
+    <!-- ==========================================
+       PAGE 10: DATASET ANALYSIS
+       ========================================== -->
+    <div id="page-analysis" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>Dataset Analysis 🔬</h2>
+          <p>Compare your symptoms against 10,001 real endometriosis patient records</p>
+        </div>
+      </div>
+
+      <!-- Dataset Overview -->
+      <div class="welcome-banner" style="margin-bottom:24px">
+        <h3>Powered by Real Patient Data 📊</h3>
+        <p>Your tracked symptoms are compared against a Kaggle dataset of <strong>10,001 patients</strong>, split into
+          4,079 diagnosed and 5,921 healthy controls. The similarity score reflects how closely your symptom profile
+          matches patients who were diagnosed with endometriosis.</p>
+      </div>
+
+      <div class="grid-2">
+        <!-- Left: Similarity Gauge + Score -->
+        <div class="card">
+          <div class="card-title">🎯 Endometriosis Similarity Score</div>
+          <div class="risk-gauge-container">
+            <canvas id="analysis-gauge-canvas" width="280" height="140"></canvas>
+            <div class="risk-label-container">
+              <div class="risk-score-value" id="analysis-score-value">—</div>
+              <div class="risk-score-label" id="analysis-score-label">Run analysis to see score</div>
+            </div>
           </div>
-          <span class="badge badge-green">📡 Active</span>
-        </div>
-        <div style="margin-top:18px">
-          <button class="btn btn-outline btn-block" onclick="logout()" style="margin-bottom:12px">👋 Logout from
-            Account</button>
-          <button class="btn btn-danger btn-block" onclick="resetAllData()">🗑️ Reset All Local Data</button>
-          <p style="font-size:.78rem;color:var(--text-muted);margin-top:8px">
-            This will permanently delete all tracked symptoms, food logs, and settings. This action cannot be undone.
-          </p>
-        </div>
-      </div>
 
-      <!-- About -->
-      <div class="settings-section">
-        <div class="settings-section-title">ℹ️ About CycleSense</div>
-        <div class="toggle-row">
-          <span class="toggle-row-label">Version</span>
-          <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">2.0.0</span>
-        </div>
-        <div class="toggle-row">
-          <span class="toggle-row-label">Technology</span>
-          <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">HTML · CSS · JavaScript</span>
-        </div>
-        <div class="toggle-row">
-          <span class="toggle-row-label">Data Storage</span>
-          <span style="color:var(--text-muted);font-size:.85rem;font-weight:700">Browser LocalStorage only</span>
-        </div>
-      </div>
+          <!-- Legend -->
+          <div style="display:flex;gap:18px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;color:#39a763">
+              <div style="width:12px;height:12px;border-radius:50%;background:#6bcb8b"></div> Low (0–34)
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;color:#b38800">
+              <div style="width:12px;height:12px;border-radius:50%;background:#f7c948"></div> Moderate (35–59)
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;color:#d94a4a">
+              <div style="width:12px;height:12px;border-radius:50%;background:#f47b7b"></div> High (60–100)
+            </div>
+          </div>
 
-      <!-- Medical Disclaimer -->
-      <div class="settings-section">
-        <div class="settings-section-title">⚠️ Medical Disclaimer</div>
-        <div class="disclaimer-box">
-          <p>🌸 <strong>CycleSense is an awareness and tracking tool, not a medical device.</strong> This app does not
-            provide medical diagnosis, treatment, or professional medical advice. The AI Risk Score is a pattern
-            indicator calculated from user-entered data and is not clinically validated.</p>
-          <br />
-          <p>Always consult a qualified gynaecologist or healthcare provider for diagnosis and treatment of PCOS,
-            Endometriosis, or any other medical condition. If you are experiencing severe symptoms, please seek medical
-            attention immediately.</p>
-          <br />
-          <p>💜 <em>Our goal is to empower women with information and tools for self-awareness — your health journey is
-              personal, valid, and worthy of proper care.</em></p>
+          <!-- Pain Percentile -->
+          <div style="margin-top:20px">
+            <div class="card-title" style="font-size:.88rem">📈 Pain Percentile Among Diagnosed Patients</div>
+            <div style="margin-top:10px;background:var(--bg-tertiary);border-radius:12px;height:14px;overflow:hidden">
+              <div id="analysis-percentile-bar"
+                style="height:100%;width:0%;background:linear-gradient(90deg,#c5b3e8,#e07aaa);border-radius:12px;transition:width .8s ease">
+              </div>
+            </div>
+            <div id="analysis-percentile-text" style="font-size:.82rem;color:var(--text-secondary);margin-top:7px">Log
+              symptoms first to see your pain percentile.</div>
+          </div>
+
+          <div class="disclaimer-box mt-6">
+            <p>🔔 <strong>Note:</strong> This score compares symptom patterns only. <strong>This is not a medical
+                diagnosis.</strong> Please consult a gynaecologist for a proper evaluation.</p>
+          </div>
+        </div>
+
+        <!-- Right: Comparison Table + Interpretation -->
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <!-- Your Profile vs Dataset -->
+          <div class="card">
+            <div class="card-title">📋 Your Profile vs Dataset Averages</div>
+            <div id="analysis-loading" style="color:var(--text-muted);font-size:.85rem;margin-top:12px">Loading your
+              data…</div>
+            <table id="analysis-table" style="width:100%;border-collapse:collapse;margin-top:16px;display:none">
+              <thead>
+                <tr style="font-size:.77rem;color:var(--text-muted);text-align:left">
+                  <th style="padding:6px 10px">Metric</th>
+                  <th style="padding:6px 10px;text-align:center">You</th>
+                  <th style="padding:6px 10px;text-align:center">Diagnosed Avg</th>
+                  <th style="padding:6px 10px;text-align:center">Healthy Avg</th>
+                </tr>
+              </thead>
+              <tbody id="analysis-table-body">
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Interpretation Card -->
+          <div class="card" id="analysis-interpretation-card" style="display:none">
+            <div class="card-title">💡 What This Means</div>
+            <div id="analysis-interpretation"
+              style="font-size:.86rem;color:var(--text-secondary);margin-top:12px;line-height:1.7"></div>
+            <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" onclick="navigateTo('symptoms')">📋 Log More Symptoms</button>
+              <button class="btn btn-outline" onclick="navigateTo('doctors')">👩‍⚕️ Find Doctor</button>
+            </div>
+          </div>
+
+          <!-- No data state -->
+          <div class="card" id="analysis-empty-card">
+            <div class="empty-state">
+              <div class="empty-icon">🔬</div>
+              <p>Log at least one symptom entry to generate your dataset comparison.</p>
+              <button class="btn btn-primary" style="margin-top:14px" onclick="navigateTo('symptoms')">📋 Log Symptoms
+                Now</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -843,6 +992,9 @@
   <div id="toast" class="toast"></div>
 
   <!-- Scripts -->
+  <!-- Global Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
   <script src="js/storage.js"></script>
   <script src="js/app.js"></script>
 
